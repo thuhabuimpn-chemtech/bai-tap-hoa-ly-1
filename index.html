@@ -5350,7 +5350,9 @@ function thCheck(ch,it,el){const s=thSt(it.id);const m=thMissing(it);
   const nx=el.querySelector('.th-mk.n');if(nx)nx.closest('button,li,.ths-r').scrollIntoView({block:'nearest',behavior:RM()?'auto':'smooth'});}
 
 /* ===== Giao bài (phương án A) ===== */
-const APP_URL='https://claude.ai/artifact/PyKSZHSzWeoYCKpo3MHMic';
+/* Link gửi SV: trên claude.ai dùng link artifact; trên GitHub Pages/Netlify dùng chính địa chỉ đang mở */
+const ON_WEB=/^https?:$/.test(location.protocol)&&/(\.github\.io|\.netlify\.app)$/.test(location.hostname);
+const APP_URL=ON_WEB?location.href.split('#')[0]:'https://claude.ai/artifact/PyKSZHSzWeoYCKpo3MHMic';
 function fnv(s){let h=0x811c9dc5;for(const ch of unescape(encodeURIComponent(s))){h^=ch.charCodeAt(0);h=Math.imul(h,0x01000193)>>>0;}return h>>>0;}
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const PCODE={},CODEP={};
@@ -5443,7 +5445,7 @@ function asgRecord(){if(!cur||!cur.asg)return;const S=store.asg[cur.asg];if(!S)r
 function asgNext(){const A=asgActive();if(!A||!cur.asg)return null;const i=A.ids.indexOf(cur.p.id);return A.ids[i+1]||null;}
 
 /* --- Trang giảng viên --- */
-function gvGate(){let ok=!!window.claude;try{ok=ok||localStorage.getItem('hl1_gv')==='1';}catch(_){}
+function gvGate(){let ok=!ON_WEB&&!!window.claude;try{ok=ok||localStorage.getItem('hl1_gv')==='1';}catch(_){}
   if(ok){renderTeacher();return;}
   view().innerHTML=`<div class="asg"><h1>Trang dành cho giảng viên</h1><section class="asg-card"><div class="asg-form"><label>Mã giảng viên<input id="gv-pin" type="password" autocomplete="off"></label><button class="btn primary" type="button" id="gv-go">Mở</button></div><div id="gv-fb"></div></section></div>`;
   const go=()=>{if($('#gv-pin').value.trim()===GV_PIN){try{localStorage.setItem('hl1_gv','1');}catch(_){}const a=document.getElementById('nav-gv');if(a)a.hidden=false;renderTeacher();}
@@ -5721,7 +5723,7 @@ function teacherAnalyze(txt){const out=$('#t-res');const toks=txt.match(/HL1\.[A
     const name=`ket-qua-${(A?A.name:'bo-bai')}.csv`;
     if(dl){try{await dl.save({filename:name,data:new Blob(['\ufeff'+_lastCSV],{type:'text/csv'})});f.textContent='Đã lưu.';}catch(e){f.textContent=e&&e.code==='declined'?'Đã hủy.':'Không lưu được tệp ở chế độ xem này.';}}
     else{try{await navigator.clipboard.writeText(_lastCSV);f.textContent='Không tải được tệp ở đây; bảng CSV đã được sao chép — dán vào Excel.';}catch(_){f.textContent='Không tải được tệp ở chế độ xem này.';}}});}
-(async()=>{let show=false;try{show=!window.claude&&localStorage.getItem('hl1_gv')==='1';}catch(_){}try{if(window.claude){const u=await claude.use('user');show=u?await u.isOwner():false;}}catch(_){}
+(async()=>{let show=false;try{show=ON_WEB&&localStorage.getItem('hl1_gv')==='1';}catch(_){}try{if(!ON_WEB&&window.claude){const u=await claude.use('user');show=u?await u.isOwner():false;}}catch(_){}
   const a=document.getElementById('nav-gv');if(a&&show)a.hidden=false;})();
 
 /* ===== Sổ tay vướng mắc: lỗi chung toàn môn (gom 65 mã lỗi thành nhóm) =====
