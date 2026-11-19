@@ -5386,8 +5386,11 @@ function renderAssign(A){const S=store.asg[A.key]||(store.asg[A.key]={mssv:'',na
   view().innerHTML=`<div class="asg">${head}
    <section class="asg-card"><div class="asg-who"><span>${S.lop?`Lớp <b>${esc(S.lop)}</b> · `:''}MSSV <b>${esc(S.mssv)}</b> · ${esc(S.name)}</span><button class="btn ghost small" type="button" id="a-chg">Đổi MSSV</button></div>
     <p class="asg-prog"><b>${done}/${A.ids.length}</b> bài đạt (từ 80 %)</p><ul class="asg-list">${rows}</ul></section>
-   <section class="asg-card"><h2>Mã xác nhận để nộp</h2><p class="small">Mã ghi lại kết quả hiện tại của bạn. Làm xong (hoặc khi đến hạn), sao chép mã và dán vào ô nộp bài trên LMS. Có thể nộp lại mã mới nếu làm thêm.</p>
-    <textarea id="a-code" class="asg-code" readonly rows="3" aria-label="Mã xác nhận">${code}</textarea><div class="row"><button class="btn primary" type="button" id="a-copy">Sao chép mã</button><span id="a-cfb" class="small muted" aria-live="polite"></span></div></section></div>`;
+   ${S.lop?`<section class="asg-card"><h2>Nộp bài</h2><div class="fb ok"><p>Điểm từng bài được <b>tự động ghi</b> vào hệ thống của giảng viên ngay khi bạn làm xong. Bạn <b>không cần</b> gửi mã qua Zalo hay Google Form.</p></div>
+    <details><summary class="small">Mã dự phòng (chỉ nộp khi giảng viên yêu cầu)</summary>
+    <textarea id="a-code" class="asg-code" readonly rows="3" aria-label="Mã xác nhận">${code}</textarea><div class="row"><button class="btn" type="button" id="a-copy">Sao chép mã</button><span id="a-cfb" class="small muted" aria-live="polite"></span></div></details></section></div>`
+   :`<section class="asg-card"><h2>Mã xác nhận để nộp</h2><p class="small">Mã ghi lại kết quả hiện tại của bạn. Làm xong (hoặc khi đến hạn), sao chép mã và dán vào ô nộp bài trên LMS. Có thể nộp lại mã mới nếu làm thêm.</p>
+    <textarea id="a-code" class="asg-code" readonly rows="3" aria-label="Mã xác nhận">${code}</textarea><div class="row"><button class="btn primary" type="button" id="a-copy">Sao chép mã</button><span id="a-cfb" class="small muted" aria-live="polite"></span></div></section></div>`}`;
   $('#a-copy').addEventListener('click',async()=>{const t=$('#a-code');t.select();let ok=false;try{await navigator.clipboard.writeText(t.value);ok=true;}catch(_){try{ok=document.execCommand('copy');}catch(__){}}
     $('#a-cfb').textContent=ok?'Đã sao chép.':'Không sao chép tự động được — mã đã được bôi đen, hãy nhấn Ctrl+C (hoặc giữ và chọn Sao chép).';});
   $('#a-chg').addEventListener('click',()=>{if(confirm('Đổi MSSV sẽ xóa kết quả của bộ bài này trên trình duyệt và tạo số liệu mới. Tiếp tục?')){store.asg[A.key]={mssv:'',name:'',lop:'',mb:'',items:{},hits:{}};save();renderAssign(A);}});}
